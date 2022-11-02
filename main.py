@@ -46,63 +46,38 @@ cook_book = get_recipes()
 create_shop_list(cook_book)
 
 # Задача №3
-def files_len(file1='./1.txt', file2='./2.txt', file3='./3.txt'):
-    merge_file = "merge_file.txt"
-    with open(file1, "r", encoding="utf-8") as file1len:
-        file1 = file1len.readlines()
 
-    with open(file2, "r", encoding="utf-8") as file2len:
-        file2 = file2len.readlines()
+import os
 
-    with open(file3, "r", encoding="utf-8") as file3len:
-        file3 = file3len.readlines()
+BASE_DIR = os.getcwd()
+FILES_DIR_NAME = "Files"
 
-    with open(merge_file, "w", encoding="utf-8") as mergefile:
-        if len(file1) < len(file2) and len(file1) < len(file3):
-            mergefile.write("Имя файла: 1.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file1)) + '\n')
-            mergefile.writelines(file1)
-            mergefile.write('\n' + '\n')
-        elif len(file2) < len(file1) and len(file2) < len(file3):
-            mergefile.write("Имя файла: 2.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file2)) + '\n')
-            mergefile.writelines(file2)
-            mergefile.write('\n' + '\n')
-        elif len(file3) < len(file1) and len(file3) < len(file2):
-            mergefile.write("Имя файла: 3.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file3)) + '\n')
-            mergefile.writelines(file3)
-            mergefile.write('\n' + '\n')
-        if len(file1) < len(file2) and len(file2) < len(file3) or len(file1) > len(file2) and len(file2) > len(file3):
-            mergefile.write("Имя файла: 2.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file2)) + '\n')
-            mergefile.writelines(file2)
-            mergefile.write('\n' + '\n')
-        elif len(file3) < len(file1) and len(file1) < len(file2) or len(file3) > len(file1) and len(file1) > len(file2):
-            mergefile.write("Имя файла: 1.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file1)) + '\n')
-            mergefile.writelines(file1)
-            mergefile.write('\n' + '\n')
-        elif len(file2) < len(file3) and len(file3) < len(file1) or len(file2) > len(file3) and len(file3) > len(file1):
-            mergefile.write("Имя файла: 3.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file3)) + '\n')
-            mergefile.writelines(file3)
-            mergefile.write('\n' + '\n')
-        if len(file1) > len(file2) and len(file1) > len(file3):
-            mergefile.write("Имя файла: 1.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file1)) + '\n')
-            mergefile.writelines(file1)
-            mergefile.write('\n' + '\n')
-        elif len(file2) > len(file1) and len(file2) > len(file3):
-            mergefile.write("Имя файла: 2.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file2)) + '\n')
-            mergefile.writelines(file2)
-            mergefile.write('\n' + '\n')
-        elif len(file3) > len(file1) and len(file3) > len(file2):
-            mergefile.write("Имя файла: 3.txt" + '\n')
-            mergefile.write("Длина файла в строках: " + str(len(file3)) + '\n')
-            mergefile.writelines(file3)
-            mergefile.write('\n' + '\n')
+file_path = os.path.join(BASE_DIR, FILES_DIR_NAME)
+files = os.listdir(file_path)
 
-files_len ()
+file_dict = {}
+for string in files:
+    name = os.path.join(file_path, string)
+    with open(name, encoding='utf-8') as file:
+        lines = file.readlines()
+        text = []
+        len_text = len(lines)
+        for line in lines:
+            text.append(line.strip())
+        file_dict[string] = (len_text, text)
 
+sorted_values = sorted(file_dict.values())
+sorted_dict = {}
+
+for position in sorted_values:
+    for lenght in file_dict.keys():
+        if file_dict[lenght] == position:
+            sorted_dict[lenght] = file_dict[lenght]
+            break
+
+with open('merge_file.txt', "w", encoding='utf-8') as file:
+    for key, value in sorted_dict.items():
+        file.write(f"{key}\n")
+        file.write(f"{value[0]}\n")
+        for val in value[1]:
+            file.write(f"{val}\n")
